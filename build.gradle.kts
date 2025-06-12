@@ -2,4 +2,8 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.room) apply false
+    alias(libs.plugins.jetbrains.kotlin.android.kapt) apply false
+    alias(libs.plugins.dagger.hilt.android) apply false
+    alias(libs.plugins.ksp) apply false
 }
