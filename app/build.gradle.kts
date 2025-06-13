@@ -38,10 +38,14 @@ android {
     buildTypes {
         debug {
             buildConfigField("String", "BASE_URL", localProperties["BASE_URL"].toString())
+            buildConfigField("String", "API_KEY", localProperties["API_KEY"].toString())
+            buildConfigField("String", "ACCESS_TOKEN", localProperties["ACCESS_TOKEN"].toString())
         }
         release {
-            buildConfigField("String", "BASE_URL", localProperties["BASE_URL"].toString())
             isMinifyEnabled = false
+            buildConfigField("String", "BASE_URL", localProperties["BASE_URL"].toString())
+            buildConfigField("String", "API_KEY", localProperties["API_KEY"].toString())
+            buildConfigField("String", "ACCESS_TOKEN", localProperties["ACCESS_TOKEN"].toString())
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -64,8 +68,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.navigation.ui.ktx)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -82,4 +86,5 @@ dependencies {
     implementation(libs.okhttp.loggingInterceptor)
     implementation(libs.datastore)
     implementation(libs.datastore.preferences)
+    implementation(libs.glide)
 }
