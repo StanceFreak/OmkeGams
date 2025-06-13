@@ -1,15 +1,15 @@
 package com.stancefreak.pihakaseng.network
 
-import com.stancefreak.combaja.data.response.MovieDetail
-import com.stancefreak.combaja.data.response.MoviesGenreList
-import com.stancefreak.combaja.data.response.MoviesPopularList
+import com.stancefreak.pihakaseng.model.remote.response.MovieDetail
+import com.stancefreak.pihakaseng.model.remote.response.MoviesGenreList
+import com.stancefreak.pihakaseng.model.remote.response.MoviesList
 import retrofit2.Response
 
 class NetworkHelper(
     private val service: NetworkService
 ): NetworkService {
-    override suspend fun getPopularMovies(token: String): Response<MoviesPopularList> {
-        return service.getPopularMovies(token)
+    override suspend fun getMovieList(token: String): Response<MoviesList> {
+        return service.getMovieList(token)
     }
 
     override suspend fun getMoviesGenre(token: String): Response<MoviesGenreList> {
@@ -20,7 +20,7 @@ class NetworkHelper(
         token: String,
         genreId: Int,
         sortBy: String
-    ): Response<MoviesPopularList> {
+    ): Response<MoviesList> {
         return service.getMoviesByGenre(token, genreId, sortBy)
     }
 
