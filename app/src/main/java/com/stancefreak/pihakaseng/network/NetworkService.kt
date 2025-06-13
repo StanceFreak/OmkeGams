@@ -1,21 +1,20 @@
 package com.stancefreak.pihakaseng.network
 
-import com.stancefreak.combaja.data.response.MovieDetail
-import com.stancefreak.combaja.data.response.MoviesGenreList
-import com.stancefreak.combaja.data.response.MoviesPopularList
+import com.stancefreak.pihakaseng.model.remote.response.MovieDetail
+import com.stancefreak.pihakaseng.model.remote.response.MoviesGenreList
+import com.stancefreak.pihakaseng.model.remote.response.MoviesList
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.Url
 
 interface NetworkService {
 
-    @GET("movie/popular")
-    suspend fun getPopularMovies(
+    @GET("movie/now_playing?region=ID")
+    suspend fun getMovieList(
         @Header("Authorization") token: String,
-    ): Response<MoviesPopularList>
+    ): Response<MoviesList>
 
     @GET("genre/movie/list")
     suspend fun getMoviesGenre(
@@ -27,7 +26,7 @@ interface NetworkService {
         @Header("Authorization") token: String,
         @Query("with_genres") genreId: Int,
         @Query("sort_by") sortBy: String
-    ): Response<MoviesPopularList>
+    ): Response<MoviesList>
 
     @GET("movie/{id}?")
     suspend fun getMovieDetail(

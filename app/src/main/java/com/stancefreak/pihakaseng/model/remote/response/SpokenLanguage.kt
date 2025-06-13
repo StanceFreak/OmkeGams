@@ -1,4 +1,4 @@
-package com.stancefreak.combaja.data.response
+package com.stancefreak.pihakaseng.model.remote.response
 
 
 import com.google.gson.annotations.SerializedName
