@@ -1,9 +1,9 @@
-package com.stancefreak.combaja.data.response
+package com.stancefreak.pihakaseng.model.remote.response
 
 
 import com.google.gson.annotations.SerializedName
 
-data class MoviesPopularList(
+data class MoviesList(
     @SerializedName("page")
     val page: Int = 0,
     @SerializedName("results")

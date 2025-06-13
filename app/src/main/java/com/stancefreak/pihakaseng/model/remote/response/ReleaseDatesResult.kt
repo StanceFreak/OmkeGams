@@ -1,7 +1,8 @@
-package com.stancefreak.combaja.data.response
+package com.stancefreak.pihakaseng.model.remote.response
 
 
 import com.google.gson.annotations.SerializedName
+import com.stancefreak.pihakaseng.model.remote.response.ReleaseDate
 
 data class ReleaseDatesResult(
     @SerializedName("iso_3166_1")
