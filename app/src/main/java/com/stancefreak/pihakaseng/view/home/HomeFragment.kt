@@ -1,13 +1,9 @@
 package com.stancefreak.pihakaseng.view.home
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.DisplayMetrics
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.base.BaseFragment
@@ -86,28 +82,39 @@ class HomeFragment :
 
     override fun setupObservers() {
         val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
-        val currentItemHorizontalMarginPx = resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
+        val currentItemHorizontalMarginPx =
+            resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
         val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
+        val startPos = Int.MAX_VALUE / 2
         vm.apply {
             observeMovieList().observe(viewLifecycleOwner) { data ->
                 binding.apply {
                     vpHomePromoSlider.apply {
                         orientation = ViewPager2.ORIENTATION_HORIZONTAL
                         adapter = promoAdapter
-                        currentItem = Int.MAX_VALUE / 2
+                        setCurrentItem(startPos - (startPos % data.results.size), false)
                     }
                     vpHomeNowPlaying.apply {
                         orientation = ViewPager2.ORIENTATION_HORIZONTAL
                         adapter = nowPlayingAdapter
-                        currentItem = Int.MAX_VALUE / 2
+                        setCurrentItem(startPos - (startPos % data.results.size), false)
                         offscreenPageLimit = 1
-                        setPageTransformer { page, position ->
+                        val offsetPx = 50.dpToPx(resources.displayMetrics)
+                        val pageMarginPx = 10.dpToPx(resources.displayMetrics)
+                        // control the padding on each items
+                        setPadding(offsetPx, 0, offsetPx, 0)
+                        setPageTransformer(MarginPageTransformer(pageMarginPx))
+                        val pageTransformer = ViewPager2.PageTransformer { page, position ->
                             page.apply {
+                                // control the distance between the items
                                 translationX = -pageTranslationX * position
-                                scaleY = 1 - (0.25f * abs(position))
-                                alpha = 0.25f + (1 - abs(position))
+                                // control the size of the offscreen size items
+                                scaleY = 1 - (0.1f * abs(position))
+                                // control the blur on the last and next items
+                                alpha = 0.5f + (1 - abs(position))
                             }
                         }
+                        setPageTransformer(pageTransformer)
                         val itemDecoration = HorizontalMarginItemDecoration(
                             requireContext(),
                             R.dimen.viewpager_current_item_horizontal_margin
@@ -124,5 +131,9 @@ class HomeFragment :
             }
         }
     }
+
+    fun Int.dpToPx(displayMetrics: DisplayMetrics): Int = (this * displayMetrics.density).toInt()
+    fun Int.pxToDp(displayMetrics: DisplayMetrics): Int = (this / displayMetrics.density).toInt()
+
 
 }
