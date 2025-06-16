@@ -11,13 +11,14 @@ import com.stancefreak.pihakaseng.model.remote.response.Result
 class HomePlayingMovieAdapter: RecyclerView.Adapter<HomePlayingMovieAdapter.ViewHolder>() {
 
     private val movieData = ArrayList<Result>()
-
     inner class ViewHolder(private val binding: ItemListNowPlayingBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Result) {
-            Glide.with(binding.ivItemMoviePlayingThumb.context)
-                .load("https://image.tmdb.org/t/p/w500${item.posterPath}")
-                .into(binding.ivItemMoviePlayingThumb)
-//            binding.ivItemPromoThumb.load("https://image.tmdb.org/t/p/w500${item.backdropPath}")
+            binding.apply {
+                Glide.with(ivItemMoviePlayingThumb.context)
+                    .load("https://image.tmdb.org/t/p/w500${item.posterPath}")
+                    .into(ivItemMoviePlayingThumb)
+                tvItemMoviePlayingIndex.text = ((adapterPosition % 20) + 1).toString()
+            }
         }
     }
 

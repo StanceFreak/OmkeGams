@@ -120,6 +120,21 @@ class HomeFragment :
                             R.dimen.viewpager_current_item_horizontal_margin
                         )
                         addItemDecoration(itemDecoration)
+                        registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                            override fun onPageSelected(position: Int) {
+                                super.onPageSelected(position)
+                                tvHomeMovieTitle.text = data.results[position % data.results.size].title
+                            }
+
+                            override fun onPageScrolled(
+                                position: Int,
+                                positionOffset: Float,
+                                positionOffsetPixels: Int
+                            ) {
+                                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                                tvHomeMovieTitle.text = data.results[position % data.results.size].title
+                            }
+                        })
                     }
                 }
                 promoAdapter.setData(data.results)
