@@ -1,6 +1,8 @@
 package com.stancefreak.pihakaseng.view.home
 
+import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
+import androidx.core.text.bold
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.MarginPageTransformer
@@ -13,6 +15,7 @@ import com.stancefreak.pihakaseng.view.adapter.HomeGenreAdapter
 import com.stancefreak.pihakaseng.view.adapter.HomePlayingMovieAdapter
 import com.stancefreak.pihakaseng.view.adapter.HomePromoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.math.RoundingMode
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -123,7 +126,14 @@ class HomeFragment :
                         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                             override fun onPageSelected(position: Int) {
                                 super.onPageSelected(position)
-                                tvHomeMovieTitle.text = data.results[position % data.results.size].title
+                                val itemPosition = position % data.results.size
+                                val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                                val marketText = SpannableStringBuilder()
+                                    .append("Film ini dapat rating $roundedRating dari penonton lho!")
+                                    .bold { append(" Harus ditonton nih!") }
+                                tvHomeMovieTitle.text =
+                                    data.results[itemPosition].title
+                                tvHomeMovieMarket.text = marketText
                             }
 
                             override fun onPageScrolled(
@@ -132,7 +142,14 @@ class HomeFragment :
                                 positionOffsetPixels: Int
                             ) {
                                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                                tvHomeMovieTitle.text = data.results[position % data.results.size].title
+                                val itemPosition = position % data.results.size
+                                val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                                val marketText = SpannableStringBuilder()
+                                    .append("Film ini dapat rating $roundedRating dari penonton lho!")
+                                    .bold { append(" Harus ditonton nih!") }
+                                tvHomeMovieTitle.text =
+                                    data.results[itemPosition].title
+                                tvHomeMovieMarket.text = marketText
                             }
                         })
                     }

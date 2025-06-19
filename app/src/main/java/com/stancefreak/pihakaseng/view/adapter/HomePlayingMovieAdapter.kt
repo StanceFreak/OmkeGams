@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.stancefreak.pihakaseng.databinding.ItemListNowPlayingBinding
-import com.stancefreak.pihakaseng.databinding.ItemListPromoBinding
 import com.stancefreak.pihakaseng.model.remote.response.Result
 
 class HomePlayingMovieAdapter: RecyclerView.Adapter<HomePlayingMovieAdapter.ViewHolder>() {
