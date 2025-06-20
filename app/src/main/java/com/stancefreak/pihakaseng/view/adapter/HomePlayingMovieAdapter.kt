@@ -1,9 +1,14 @@
 package com.stancefreak.pihakaseng.view.adapter
 
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.databinding.ItemListNowPlayingBinding
 import com.stancefreak.pihakaseng.model.remote.response.Result
 
@@ -17,6 +22,11 @@ class HomePlayingMovieAdapter: RecyclerView.Adapter<HomePlayingMovieAdapter.View
                     .load("https://image.tmdb.org/t/p/w500${item.posterPath}")
                     .into(ivItemMoviePlayingThumb)
                 tvItemMoviePlayingIndex.text = ((adapterPosition % 20) + 1).toString()
+                itemView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putInt("movieId", item.id)
+                    itemView.findNavController().navigate(R.id.home_to_detail, bundle)
+                }
             }
         }
     }
