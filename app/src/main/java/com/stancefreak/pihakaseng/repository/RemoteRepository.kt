@@ -1,5 +1,6 @@
 package com.stancefreak.pihakaseng.repository
 
+import com.stancefreak.pihakaseng.model.remote.response.MovieDetail
 import com.stancefreak.pihakaseng.model.remote.response.MoviesGenreList
 import com.stancefreak.pihakaseng.model.remote.response.MoviesList
 import com.stancefreak.pihakaseng.network.NetworkHelper
@@ -16,6 +17,14 @@ class RemoteRepository @Inject constructor(
 
     suspend fun getMoviesGenre(token: String): Response<MoviesGenreList> {
         return helper.getMoviesGenre(token)
+    }
+
+    suspend fun getMovieDetail(
+        token: String,
+        id: Int,
+        query: String
+    ): Response<MovieDetail> {
+        return helper.getMovieDetail(token, id, query)
     }
 
 }
