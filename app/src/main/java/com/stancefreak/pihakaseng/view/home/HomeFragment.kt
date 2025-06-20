@@ -26,6 +26,7 @@ class HomeFragment :
     private lateinit var promoAdapter: HomePromoAdapter
     private lateinit var nowPlayingAdapter: HomePlayingMovieAdapter
     override val vm: HomeViewModel by viewModels()
+
     private val regionList = arrayListOf<String>(
         "Aceh",
         "Bali",
@@ -68,7 +69,14 @@ class HomeFragment :
         "Sumatera Utara",
     )
 
+    override fun setupToolbar() {
+    }
+
     override fun setupViews() {
+        val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
+        val currentItemHorizontalMarginPx =
+            resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
+        val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
         genreAdapter = HomeGenreAdapter()
         promoAdapter = HomePromoAdapter()
         nowPlayingAdapter = HomePlayingMovieAdapter()
@@ -80,14 +88,35 @@ class HomeFragment :
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = genreAdapter
             }
+            vpHomeNowPlaying.apply {
+                orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                offscreenPageLimit = 1
+                val offsetPx = 50.dpToPx(resources.displayMetrics)
+                val pageMarginPx = 10.dpToPx(resources.displayMetrics)
+                // control the padding on each items
+                setPadding(offsetPx, 0, offsetPx, 0)
+                setPageTransformer(MarginPageTransformer(pageMarginPx))
+                val pageTransformer = ViewPager2.PageTransformer { page, position ->
+                    page.apply {
+                        // control the distance between the items
+                        translationX = -pageTranslationX * position
+                        // control the size of the offscreen size items
+                        scaleY = 1 - (0.1f * abs(position))
+                        // control the blur on the last and next items
+                        alpha = 0.5f + (1 - abs(position))
+                    }
+                }
+                setPageTransformer(pageTransformer)
+                val itemDecoration = HorizontalMarginItemDecoration(
+                    requireContext(),
+                    R.dimen.viewpager_current_item_horizontal_margin
+                )
+                addItemDecoration(itemDecoration)
+            }
         }
     }
 
     override fun setupObservers() {
-        val nextItemVisiblePx = resources.getDimension(R.dimen.viewpager_next_item_visible)
-        val currentItemHorizontalMarginPx =
-            resources.getDimension(R.dimen.viewpager_current_item_horizontal_margin)
-        val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
         val startPos = Int.MAX_VALUE / 2
         vm.apply {
             observeMovieList().observe(viewLifecycleOwner) { data ->
@@ -98,31 +127,8 @@ class HomeFragment :
                         setCurrentItem(startPos - (startPos % data.results.size), false)
                     }
                     vpHomeNowPlaying.apply {
-                        orientation = ViewPager2.ORIENTATION_HORIZONTAL
                         adapter = nowPlayingAdapter
                         setCurrentItem(startPos - (startPos % data.results.size), false)
-                        offscreenPageLimit = 1
-                        val offsetPx = 50.dpToPx(resources.displayMetrics)
-                        val pageMarginPx = 10.dpToPx(resources.displayMetrics)
-                        // control the padding on each items
-                        setPadding(offsetPx, 0, offsetPx, 0)
-                        setPageTransformer(MarginPageTransformer(pageMarginPx))
-                        val pageTransformer = ViewPager2.PageTransformer { page, position ->
-                            page.apply {
-                                // control the distance between the items
-                                translationX = -pageTranslationX * position
-                                // control the size of the offscreen size items
-                                scaleY = 1 - (0.1f * abs(position))
-                                // control the blur on the last and next items
-                                alpha = 0.5f + (1 - abs(position))
-                            }
-                        }
-                        setPageTransformer(pageTransformer)
-                        val itemDecoration = HorizontalMarginItemDecoration(
-                            requireContext(),
-                            R.dimen.viewpager_current_item_horizontal_margin
-                        )
-                        addItemDecoration(itemDecoration)
                         registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                             override fun onPageSelected(position: Int) {
                                 super.onPageSelected(position)
