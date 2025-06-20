@@ -27,9 +27,12 @@ abstract class BaseFragment<VB: ViewBinding, VM: ViewModel?>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
         setupViews()
         setupObservers()
     }
+
+    abstract fun setupToolbar()
 
     abstract fun setupViews()
 

@@ -3,11 +3,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FF888888</color>
-    <color name="gray_alt">#FF909092</color>
+    <color name="gray_2">#FF909092</color>
     <color name="light_gray">#FFEEEEEE</color>
+    <color name="gray_3">#809E9E9E</color>
     <color name="indigo">#FF000435</color>
     <color name="sky_blue">#FF2586b8</color>
     <color name="yellow">#FFffb30d</color>
     <color name="semi_trans_gray">#99404040</color>
     <color name="indigo_alt">#FF000068</color>
+    <color name="red">#EB0700</color>
 </resources>
