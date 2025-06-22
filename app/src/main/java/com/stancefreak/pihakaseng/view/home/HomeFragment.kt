@@ -1,7 +1,9 @@
 package com.stancefreak.pihakaseng.view.home
 
+import android.os.Bundle
 import android.text.SpannableStringBuilder
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.core.text.bold
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -79,7 +81,7 @@ class HomeFragment :
         val pageTranslationX = nextItemVisiblePx + currentItemHorizontalMarginPx
         genreAdapter = HomeGenreAdapter()
         promoAdapter = HomePromoAdapter()
-        nowPlayingAdapter = HomePlayingMovieAdapter()
+        nowPlayingAdapter = HomePlayingMovieAdapter(vm)
         binding.apply {
             vm.fetchHomeContent()
             tvHomeRegion.text = regionList.random()
@@ -126,38 +128,74 @@ class HomeFragment :
                         adapter = promoAdapter
                         setCurrentItem(startPos - (startPos % data.results.size), false)
                     }
-                    vpHomeNowPlaying.apply {
-                        adapter = nowPlayingAdapter
-                        setCurrentItem(startPos - (startPos % data.results.size), false)
-                        registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                            override fun onPageSelected(position: Int) {
-                                super.onPageSelected(position)
-                                val itemPosition = position % data.results.size
-                                val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
-                                val marketText = SpannableStringBuilder()
-                                    .append("Film ini dapat rating $roundedRating dari penonton lho!")
-                                    .bold { append(" Harus ditonton nih!") }
-                                tvHomeMovieTitle.text =
-                                    data.results[itemPosition].title
-                                tvHomeMovieMarket.text = marketText
+                    fetchVpState().observe(viewLifecycleOwner) { savedPosition ->
+                        vpHomeNowPlaying.apply {
+                            adapter = nowPlayingAdapter
+//                            setCurrentItem(startPos - (startPos % data.results.size), true)
+                            if (savedPosition != null && savedPosition != 0) {
+                                Log.d("tes saved item pos :", savedPosition.toString())
+//                                setCurrentItem(savedPosition % data.results.size, false)
+                                setCurrentItem(savedPosition, false)
                             }
+                            else {
+//                                setCurrentItem(startPos % data.results.size, true)
+                                setCurrentItem(2, false)
+                            }
+                            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                                override fun onPageSelected(position: Int) {
+                                    Log.d("tes selected item pos :", position.toString())
+                                    super.onPageSelected(position)
+//                                    val itemPosition = position % data.results.size
+                                    val itemPosition = (position + data.results.size - 2) % data.results.size
+                                    val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                                    val marketText = SpannableStringBuilder()
+                                        .append("Film ini dapat rating $roundedRating dari penonton lho!")
+                                        .bold { append(" Harus ditonton nih!") }
+                                    tvHomeMovieTitle.text =
+                                        data.results[itemPosition].title
+                                    tvHomeMovieMarket.text = marketText
+                                }
 
-                            override fun onPageScrolled(
-                                position: Int,
-                                positionOffset: Float,
-                                positionOffsetPixels: Int
-                            ) {
-                                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                                val itemPosition = position % data.results.size
-                                val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
-                                val marketText = SpannableStringBuilder()
-                                    .append("Film ini dapat rating $roundedRating dari penonton lho!")
-                                    .bold { append(" Harus ditonton nih!") }
-                                tvHomeMovieTitle.text =
-                                    data.results[itemPosition].title
-                                tvHomeMovieMarket.text = marketText
-                            }
-                        })
+                                override fun onPageScrolled(
+                                    position: Int,
+                                    positionOffset: Float,
+                                    positionOffsetPixels: Int
+                                ) {
+                                    Log.d("tes scrolled item pos :", position.toString())
+                                    super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+//                                    val itemPosition = position % data.results.size
+
+                                    val itemPosition = (position + data.results.size - 2) % data.results.size
+                                    val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                                    val marketText = SpannableStringBuilder()
+                                        .append("Film ini dapat rating $roundedRating dari penonton lho!")
+                                        .bold { append(" Harus ditonton nih!") }
+                                    tvHomeMovieTitle.text =
+                                        data.results[itemPosition].title
+                                    tvHomeMovieMarket.text = marketText
+                                }
+
+                                override fun onPageScrollStateChanged(state: Int) {
+                                    super.onPageScrollStateChanged(state)
+
+                                    // range data 0 - 21
+                                    val fakeSize = data.results.size + 2
+                                    val currentPosition = binding.vpHomeNowPlaying.currentItem
+                                    if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                                        if (currentPosition == 0) {
+                                            vpHomeNowPlaying.setCurrentItem(fakeSize - 2, false)
+                                        }
+                                        else if (currentPosition == fakeSize - 1) {
+                                            vpHomeNowPlaying.setCurrentItem(1, false)
+                                        }
+                                    }
+                                    else if (state == ViewPager2.SCROLL_STATE_DRAGGING && currentPosition == fakeSize) {
+                                        vpHomeNowPlaying.setCurrentItem(2, false)
+                                    }
+
+                                }
+                            })
+                        }
                     }
                 }
                 promoAdapter.setData(data.results)
