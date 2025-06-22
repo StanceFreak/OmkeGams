@@ -3,6 +3,7 @@ package com.stancefreak.pihakaseng.view.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.stancefreak.pihakaseng.BuildConfig
 import com.stancefreak.pihakaseng.model.remote.response.EventState
@@ -75,6 +76,22 @@ class HomeViewModel @Inject constructor(
                 _eventState.postValue(eventList)
                 e.printStackTrace()
             }
+        }
+    }
+
+    fun storeVpState(position: Int) {
+        viewModelScope.launch {
+            repo.storeVpState(position)
+        }
+    }
+
+    fun fetchVpState(): LiveData<Int?> {
+        return repo.fetchVpState().asLiveData()
+    }
+
+    fun removeVpState() {
+        viewModelScope.launch {
+            repo.removeVpState()
         }
     }
 
