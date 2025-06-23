@@ -3,6 +3,8 @@ package com.stancefreak.pihakaseng.di
 import com.stancefreak.pihakaseng.repository.AppRepository
 import com.stancefreak.pihakaseng.view.detail.DetailViewModel
 import com.stancefreak.pihakaseng.view.home.HomeViewModel
+import com.stancefreak.pihakaseng.view.jadwal.JadwalViewModel
+import com.stancefreak.pihakaseng.view.sinopsis.SinopsisViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,4 +22,12 @@ object ViewModelModule {
     @Provides
     @ViewModelScoped
     fun detailViewModel(repository: AppRepository) = DetailViewModel(repository)
+
+    @Provides
+    @ViewModelScoped
+    fun jadwalViewModel(repository: AppRepository) = JadwalViewModel(repository)
+
+    @Provides
+    @ViewModelScoped
+    fun sinopsisViewModel(repository: AppRepository) = SinopsisViewModel(repository)
 }
