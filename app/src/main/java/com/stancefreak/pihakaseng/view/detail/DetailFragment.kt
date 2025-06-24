@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.base.BaseFragment
 import com.stancefreak.pihakaseng.databinding.FragmentDetailBinding
+import com.stancefreak.pihakaseng.model.remote.request.DetailTabData
 import com.stancefreak.pihakaseng.view.adapter.DetailTabAdapter
 import com.stancefreak.pihakaseng.view.jadwal.JadwalFragment
 import com.stancefreak.pihakaseng.view.sinopsis.SinopsisFragment
@@ -53,7 +54,10 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
     override fun setupViews() {
         val movieId = arguments?.getInt("movieId")
         if (movieId != null) {
-            vm.fetchMovieDetail(movieId)
+            vm.apply {
+                fetchMovieDetail(movieId)
+                fetchMovieTrailer(movieId)
+            }
         }
     }
 
@@ -129,13 +133,31 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                         rbDetailMovieRating.rating = roundedRating
                         tvDetailMovieRatingValue.text = roundedRating.toString()
                         tvDetailMovieRatingCount.text = "${data.voteCount} Vote"
-                        vpDetailTabContainer.apply {
-                            adapter = tabAdapter
-                            isUserInputEnabled = false
+
+                        observeMovieTrailer().observe(viewLifecycleOwner) { trailer ->
+                            val tabList = listOf("Sinopsis", "Jadwal")
+                            if (trailer != null) {
+                                val sinopsis = DetailTabData(
+                                    data,
+                                    trailer.results.sortedByDescending {
+                                        it.type == "Trailer"
+                                    }
+                                )
+                                val tabAdapter = DetailTabAdapter(
+                                    sinopsis,
+                                    (activity as AppCompatActivity).supportFragmentManager,
+                                    2,
+                                    lifecycle
+                                )
+                                vpDetailTabContainer.apply {
+                                    adapter = tabAdapter
+                                    isUserInputEnabled = false
+                                }
+                                TabLayoutMediator(tlDetailTabContainer, vpDetailTabContainer) { tab, pos ->
+                                    tab.text = tabList[pos]
+                                }.attach()
+                            }
                         }
-                        TabLayoutMediator(tlDetailTabContainer, vpDetailTabContainer) { tab, pos ->
-                            tab.text = tabList[pos]
-                        }.attach()
                     }
                 }
             }
