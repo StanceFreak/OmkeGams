@@ -12,10 +12,14 @@ data class Cast(
     val character: String = "",
     @SerializedName("credit_id")
     val creditId: String = "",
+    @SerializedName("department")
+    val department: String = "",
     @SerializedName("gender")
     val gender: Int = 0,
     @SerializedName("id")
     val id: Int = 0,
+    @SerializedName("job")
+    val job: String = "",
     @SerializedName("known_for_department")
     val knownForDepartment: String = "",
     @SerializedName("name")
