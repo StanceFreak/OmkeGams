@@ -9,5 +9,5 @@ data class Credits(
     @SerializedName("cast")
     val cast: List<Cast> = listOf(),
     @SerializedName("crew")
-    val crew: List<Crew> = listOf()
+    val crew: List<Cast> = listOf()
 )
