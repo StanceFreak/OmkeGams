@@ -10,13 +10,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Header"
+        android:layout_marginHorizontal="20dp"
         android:textStyle="bold"
         android:textColor="@color/indigo"
-        android:textSize="20sp"/>
+        android:textSize="16sp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_sinopsis_children"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingStart="20dp"
+        android:clipToPadding="false"/>
 
 </LinearLayout>
