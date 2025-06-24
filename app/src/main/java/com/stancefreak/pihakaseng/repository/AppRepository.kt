@@ -1,6 +1,7 @@
 package com.stancefreak.pihakaseng.repository
 
 import com.stancefreak.pihakaseng.model.remote.response.MovieDetail
+import com.stancefreak.pihakaseng.model.remote.response.MovieTrailer
 import com.stancefreak.pihakaseng.model.remote.response.MoviesGenreList
 import com.stancefreak.pihakaseng.model.remote.response.MoviesList
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +12,8 @@ class AppRepository @Inject constructor(
     private val remote: RemoteRepository,
     private val local: LocalRepository
 ) {
+
+    // remote
 
     suspend fun getMovieList(token: String): Response<MoviesList> {
         return remote.getMovieList(token)
@@ -27,6 +30,12 @@ class AppRepository @Inject constructor(
     ): Response<MovieDetail> {
         return remote.getMovieDetail(token, id, query)
     }
+
+    suspend fun getMovieTrailer(token: String, id: Int): Response<MovieTrailer> {
+        return remote.getMovieTrailer(token, id)
+    }
+
+    //local
 
     suspend fun storeVpState(pref: Int) {
         return local.storeVpState(pref)

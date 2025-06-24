@@ -1,6 +1,7 @@
 package com.stancefreak.pihakaseng.network
 
 import com.stancefreak.pihakaseng.model.remote.response.MovieDetail
+import com.stancefreak.pihakaseng.model.remote.response.MovieTrailer
 import com.stancefreak.pihakaseng.model.remote.response.MoviesGenreList
 import com.stancefreak.pihakaseng.model.remote.response.MoviesList
 import retrofit2.Response
@@ -30,5 +31,9 @@ class NetworkHelper(
         query: String
     ): Response<MovieDetail> {
         return service.getMovieDetail(token, id, query)
+    }
+
+    override suspend fun getMovieTrailer(token: String, id: Int): Response<MovieTrailer> {
+        return service.getMovieTrailer(token, id)
     }
 }
