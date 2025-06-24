@@ -183,7 +183,8 @@
                             android:layout_gravity="center"
                             style="@android:style/Widget.DeviceDefault.RatingBar.Small"
                             android:rating="3.7"
-                            android:progressTint="@color/yellow"/>
+                            android:progressTint="@color/yellow"
+                            android:secondaryProgressTint="@color/light_gray_2"/>
 
                     </LinearLayout>
 

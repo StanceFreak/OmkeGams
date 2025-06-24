@@ -1,34 +1,15 @@
 package com.stancefreak.pihakaseng.view.detail
 
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
-import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.base.BaseFragment
 import com.stancefreak.pihakaseng.databinding.FragmentDetailBinding
 import com.stancefreak.pihakaseng.model.remote.request.DetailTabData
 import com.stancefreak.pihakaseng.view.adapter.DetailTabAdapter
-import com.stancefreak.pihakaseng.view.jadwal.JadwalFragment
-import com.stancefreak.pihakaseng.view.sinopsis.SinopsisFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
 
@@ -64,7 +45,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
     override fun setupObservers() {
         binding.apply {
             vm.apply {
-                observerMovieDetail().observe(viewLifecycleOwner) { data ->
+                observeMovieDetail().observe(viewLifecycleOwner) { data ->
                     if (data != null) {
                         appbarDetailHeaderContainer.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
                             val scrollRange = appbarDetailHeaderContainer.totalScrollRange
@@ -111,13 +92,6 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                         val directorIndex = data.credits.crew.indexOfFirst { item ->
                             item.job == "Director"
                         }
-                        val tabAdapter = DetailTabAdapter(
-                            data,
-                            (activity as AppCompatActivity).supportFragmentManager,
-                            2,
-                            lifecycle
-                        )
-                        val tabList = listOf("Sinopsis", "Jadwal")
                         tvDetailMovieHeaderTitle.text = data.title
                         Glide.with(ivDetailMovieBackdrop.context)
                             .load("https://image.tmdb.org/t/p/w500${data.backdropPath}")
@@ -130,7 +104,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                         tvDetailMovieDuration.text = "Durasi\t\t\t\t\t\t\t$movieDuration"
                         tvDetailMovieDirector.text = "Sutradara\t\t\t\t${data.credits.crew[directorIndex].name}"
                         tvDetailMovieAgeRating.text = "Rating Usia\t\t\t${data.releaseDates.results[isoIndex].releaseDates[certIndex].certification}"
-                        rbDetailMovieRating.rating = roundedRating
+                        rbDetailMovieRating.rating = roundedRating / 2
                         tvDetailMovieRatingValue.text = roundedRating.toString()
                         tvDetailMovieRatingCount.text = "${data.voteCount} Vote"
 
