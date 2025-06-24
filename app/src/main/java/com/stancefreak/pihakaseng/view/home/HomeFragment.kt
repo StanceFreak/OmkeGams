@@ -18,6 +18,8 @@ import com.stancefreak.pihakaseng.view.adapter.HomePlayingMovieAdapter
 import com.stancefreak.pihakaseng.view.adapter.HomePromoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.util.Date
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -122,37 +124,37 @@ class HomeFragment :
         val startPos = Int.MAX_VALUE / 2
         vm.apply {
             observeMovieList().observe(viewLifecycleOwner) { data ->
+                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                val currentDate = sdf.format(Date())
+                val sortedData = data.results.sortedBy {
+                    it.popularity
+                }.sortedByDescending { it.releaseDate }
                 binding.apply {
                     vpHomePromoSlider.apply {
                         orientation = ViewPager2.ORIENTATION_HORIZONTAL
                         adapter = promoAdapter
-                        setCurrentItem(startPos - (startPos % data.results.size), false)
+                        setCurrentItem(startPos - (startPos % sortedData.size), false)
                     }
                     fetchVpState().observe(viewLifecycleOwner) { savedPosition ->
                         vpHomeNowPlaying.apply {
                             adapter = nowPlayingAdapter
-//                            setCurrentItem(startPos - (startPos % data.results.size), true)
                             if (savedPosition != null && savedPosition != 0) {
-                                Log.d("tes saved item pos :", savedPosition.toString())
-//                                setCurrentItem(savedPosition % data.results.size, false)
                                 setCurrentItem(savedPosition, false)
                             }
                             else {
-//                                setCurrentItem(startPos % data.results.size, true)
                                 setCurrentItem(2, false)
                             }
                             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                                 override fun onPageSelected(position: Int) {
                                     Log.d("tes selected item pos :", position.toString())
                                     super.onPageSelected(position)
-//                                    val itemPosition = position % data.results.size
-                                    val itemPosition = (position + data.results.size - 2) % data.results.size
-                                    val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                                    val itemPosition = (position + sortedData.size - 2) % sortedData.size
+                                    val roundedRating = sortedData[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
                                     val marketText = SpannableStringBuilder()
                                         .append("Film ini dapat rating $roundedRating dari penonton lho!")
                                         .bold { append(" Harus ditonton nih!") }
                                     tvHomeMovieTitle.text =
-                                        data.results[itemPosition].title
+                                        sortedData[itemPosition].title
                                     tvHomeMovieMarket.text = marketText
                                 }
 
@@ -161,25 +163,21 @@ class HomeFragment :
                                     positionOffset: Float,
                                     positionOffsetPixels: Int
                                 ) {
-                                    Log.d("tes scrolled item pos :", position.toString())
                                     super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-//                                    val itemPosition = position % data.results.size
 
-                                    val itemPosition = (position + data.results.size - 2) % data.results.size
-                                    val roundedRating = data.results[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
+                                    val itemPosition = (position + sortedData.size - 2) % sortedData.size
+                                    val roundedRating = sortedData[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
                                     val marketText = SpannableStringBuilder()
                                         .append("Film ini dapat rating $roundedRating dari penonton lho!")
                                         .bold { append(" Harus ditonton nih!") }
                                     tvHomeMovieTitle.text =
-                                        data.results[itemPosition].title
+                                        sortedData[itemPosition].title
                                     tvHomeMovieMarket.text = marketText
                                 }
 
                                 override fun onPageScrollStateChanged(state: Int) {
                                     super.onPageScrollStateChanged(state)
-
-                                    // range data 0 - 21
-                                    val fakeSize = data.results.size + 2
+                                    val fakeSize = sortedData.size + 2
                                     val currentPosition = binding.vpHomeNowPlaying.currentItem
                                     if (state == ViewPager2.SCROLL_STATE_IDLE) {
                                         if (currentPosition == 0) {
@@ -198,8 +196,8 @@ class HomeFragment :
                         }
                     }
                 }
-                promoAdapter.setData(data.results)
-                nowPlayingAdapter.setData(data.results)
+                promoAdapter.setData(sortedData)
+                nowPlayingAdapter.setData(sortedData)
 
             }
             observeGenreList().observe(viewLifecycleOwner) { data ->
