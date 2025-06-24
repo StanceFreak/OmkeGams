@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.stancefreak.pihakaseng.BuildConfig
 import com.stancefreak.pihakaseng.model.remote.response.EventState
 import com.stancefreak.pihakaseng.model.remote.response.MovieDetail
+import com.stancefreak.pihakaseng.model.remote.response.MovieTrailer
 import com.stancefreak.pihakaseng.repository.AppRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -26,7 +27,10 @@ class DetailViewModel @Inject constructor(
     fun observeEventState(): LiveData<ArrayList<EventState>?> = _eventState
 
     private val _movieDetail = MutableLiveData<MovieDetail?>()
-    fun observerMovieDetail(): LiveData<MovieDetail?> = _movieDetail
+    fun observeMovieDetail(): LiveData<MovieDetail?> = _movieDetail
+
+    private val _movieTrailer = MutableLiveData<MovieTrailer?>()
+    fun observeMovieTrailer(): LiveData<MovieTrailer?> = _movieTrailer
 
     private val eventList = ArrayList<EventState>()
 
@@ -48,11 +52,52 @@ class DetailViewModel @Inject constructor(
                     _eventState.postValue(eventList)
                 }
                 else {
-                    val genreErr = detailResponse.errorBody()?.string()?.let { JSONObject(it) }
+                    val err = detailResponse.errorBody()?.string()?.let { JSONObject(it) }
                     _loadingState.postValue(false)
                     eventList.apply {
                         clear()
-                        genreErr?.getString("message")?.let { msg ->
+                        err?.getString("message")?.let { msg ->
+                            add(EventState("srvErr", msg))
+                        }
+                    }
+                    _eventState.postValue(eventList)
+                }
+            }
+            catch (e: Exception) {
+                _loadingState.postValue(false)
+                eventList.apply {
+                    clear()
+                    EventState("netErr", e.message)
+                }
+                _eventState.postValue(eventList)
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun fetchMovieTrailer(
+        id: Int
+    ) {
+        _loadingState.postValue(true)
+        _eventState.postValue(null)
+        viewModelScope.launch {
+            try {
+                val trailerResponse = repo.getMovieTrailer("Bearer ${BuildConfig.ACCESS_TOKEN}", id,)
+                if (trailerResponse.isSuccessful) {
+                    _loadingState.postValue(false)
+                    eventList.apply {
+                        clear()
+                        add(EventState("success", "success getting data from API"))
+                    }
+                    _movieTrailer.postValue(trailerResponse.body())
+                    _eventState.postValue(eventList)
+                }
+                else {
+                    val err = trailerResponse.errorBody()?.string()?.let { JSONObject(it) }
+                    _loadingState.postValue(false)
+                    eventList.apply {
+                        clear()
+                        err?.getString("message")?.let { msg ->
                             add(EventState("srvErr", msg))
                         }
                     }
