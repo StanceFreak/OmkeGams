@@ -116,7 +116,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
 //                        }
 
                         observeMovieTrailer().observe(viewLifecycleOwner) { trailer ->
-                            val tabList = listOf("Sinopsis", "Jadwal")
+                            val tabList = listOf("SINOPSIS", "JADWAL")
                             if (trailer != null) {
                                 val sinopsis = DetailTabData(
                                     data,
@@ -133,6 +133,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                                 vpDetailTabContainer.apply {
                                     adapter = tabAdapter
                                     isUserInputEnabled = false
+                                    setCurrentItem(1, false)
                                 }
                                 TabLayoutMediator(tlDetailTabContainer, vpDetailTabContainer) { tab, pos ->
                                     tab.text = tabList[pos]
