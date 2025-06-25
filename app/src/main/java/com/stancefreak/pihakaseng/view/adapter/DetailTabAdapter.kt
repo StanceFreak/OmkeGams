@@ -22,7 +22,7 @@ class DetailTabAdapter(
         return when (position) {
             0 -> SinopsisFragment(data)
             1 -> JadwalFragment()
-            else -> SinopsisFragment(data)
+            else -> JadwalFragment()
         }
     }
 }
