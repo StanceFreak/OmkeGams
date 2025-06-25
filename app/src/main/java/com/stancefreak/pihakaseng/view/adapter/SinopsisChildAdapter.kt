@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.databinding.ItemListSinopsisParentBinding
 import com.stancefreak.pihakaseng.databinding.ItemListSinopsisPemeranBinding
 import com.stancefreak.pihakaseng.databinding.ItemListSinopsisVideoBinding
@@ -38,6 +39,9 @@ class SinopsisChildAdapter(
             binding.apply {
                 Glide.with(itemView.context)
                     .load("https://image.tmdb.org/t/p/w500${item.profilePath}")
+                    .fallback(R.drawable.ic_avatar_thumb)
+                    .error(R.drawable.ic_avatar_thumb)
+                    .fitCenter()
                     .into(ivItemSinopsisPemeranThumb)
                 tvItemSinopsisPemeranName.text = item.name
                 if (item.character.isNotEmpty()) {
