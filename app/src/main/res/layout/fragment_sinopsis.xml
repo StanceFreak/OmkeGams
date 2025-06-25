@@ -24,6 +24,7 @@
         android:id="@+id/rv_sinopsis_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="20dp"
         tools:listitem="@layout/item_list_sinopsis_parent"/>
 
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.stancefreak.pihakaseng.view.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,17 @@ class SinopsisParentAdapter(
             binding.apply {
                 val childAdapter = SinopsisChildAdapter(header, data)
                 tvItemSinopsisParentHeader.text = header
+                if (header == "Pemeran") {
+                    tvItemSinopsisParentSeeAll.visibility = View.GONE
+                }
+                else {
+                    if (data.trailer.size > 10) {
+                        tvItemSinopsisParentSeeAll.visibility = View.VISIBLE
+                    }
+                    else {
+                        tvItemSinopsisParentSeeAll.visibility = View.GONE
+                    }
+                }
                 rvSinopsisChildren.apply {
                     layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                     adapter = childAdapter
