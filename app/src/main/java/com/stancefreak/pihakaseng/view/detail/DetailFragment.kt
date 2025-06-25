@@ -1,9 +1,13 @@
 package com.stancefreak.pihakaseng.view.detail
 
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.base.BaseFragment
@@ -107,6 +111,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                         rbDetailMovieRating.rating = roundedRating / 2
                         tvDetailMovieRatingValue.text = roundedRating.toString()
                         tvDetailMovieRatingCount.text = "${data.voteCount} Vote"
+//                        tbDetailMovieWatchlist.setOnCheckedChangeListener { compoundButton, isChecked ->
+//                            if (isChecked)
+//                        }
 
                         observeMovieTrailer().observe(viewLifecycleOwner) { trailer ->
                             val tabList = listOf("Sinopsis", "Jadwal")
@@ -130,6 +137,38 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                                 TabLayoutMediator(tlDetailTabContainer, vpDetailTabContainer) { tab, pos ->
                                     tab.text = tabList[pos]
                                 }.attach()
+
+                                tlDetailTabContainer.addOnTabSelectedListener(object :
+                                    OnTabSelectedListener {
+                                    override fun onTabSelected(tab: TabLayout.Tab?) {
+                                        if (tab != null) {
+                                            vpDetailTabContainer.setCurrentItem(tab.position, false)
+                                            if (tab.position == 0) {
+                                                tvDetailBottomBtnLabel.apply {
+                                                    text = "NONTON YUK!"
+                                                    setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow))
+                                                }
+                                                llDetailBottomBtn.setBackgroundResource(R.color.indigo)
+                                                ivDetailBottomBtnIcon.visibility = View.GONE
+                                            }
+                                            else if (tab.position == 1) {
+                                                tvDetailBottomBtnLabel.apply {
+                                                    text = "BELI TIKET"
+                                                    setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_3_alt))
+                                                }
+                                                llDetailBottomBtn.setBackgroundResource(R.color.light_gray_2)
+                                                ivDetailBottomBtnIcon.visibility = View.VISIBLE
+                                            }
+                                        }
+                                    }
+
+                                    override fun onTabUnselected(tab: TabLayout.Tab?) {
+                                    }
+
+                                    override fun onTabReselected(tab: TabLayout.Tab?) {
+                                    }
+
+                                })
                             }
                         }
                     }
