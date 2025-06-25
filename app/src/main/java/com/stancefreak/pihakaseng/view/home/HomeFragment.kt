@@ -126,8 +126,8 @@ class HomeFragment :
             observeMovieList().observe(viewLifecycleOwner) { data ->
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
                 val currentDate = sdf.format(Date())
-                val sortedData = data.results.sortedBy {
-                    it.popularity
+                val sortedData = data.results.filter {
+                    it.releaseDate <= currentDate
                 }.sortedByDescending { it.releaseDate }
                 binding.apply {
                     vpHomePromoSlider.apply {
