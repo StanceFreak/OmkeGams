@@ -88,7 +88,7 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                         val minutes = data.runtime % 60
                         val movieDuration = "$hours jam $minutes menit";
                         val isoIndex = data.releaseDates.results.indexOfFirst { item ->
-                            item.iso31661 == "US" || item.iso31661 == data.originCountry.firstOrNull()
+                            item.iso31661 == "US" || item.iso31661 == "ID" || item.iso31661 == data.originCountry.firstOrNull()
                         }
                         val certIndex = data.releaseDates.results[isoIndex].releaseDates.indexOfFirst {item ->
                             item.certification.isNotEmpty()
