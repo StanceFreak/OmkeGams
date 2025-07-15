@@ -16,6 +16,10 @@ android {
     namespace = "com.stancefreak.pihakaseng"
     compileSdk = 35
 
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
+
     room {
         schemaDirectory("$projectDir/schemas")
     }
@@ -87,4 +91,5 @@ dependencies {
     implementation(libs.datastore)
     implementation(libs.datastore.preferences)
     implementation(libs.glide)
+    coreLibraryDesugaring(libs.desugar)
 }
