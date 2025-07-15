@@ -24,7 +24,6 @@ class HomePlayingMovieAdapter(
                 Glide.with(ivItemMoviePlayingThumb.context)
                     .load("https://image.tmdb.org/t/p/w500${item.posterPath}")
                     .into(ivItemMoviePlayingThumb)
-//                tvItemMoviePlayingIndex.text = ((adapterPosition % 20) + 1).toString()
                 tvItemMoviePlayingIndex.text = (((adapterPosition + movieData.size - 2) % movieData.size) + 1).toString()
                 itemView.setOnClickListener {
                     val bundle = Bundle()
@@ -46,13 +45,10 @@ class HomePlayingMovieAdapter(
     }
 
     override fun getItemCount(): Int {
-//        return Int.MAX_VALUE
         return movieData.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        val holderData = this.movieData[position % movieData.size]
-        Log.d("test item size :", movieData.size.toString())
         val holderData = this.movieData[position]
         holder.bind(holderData)
     }
@@ -64,9 +60,6 @@ class HomePlayingMovieAdapter(
             for (i in 0 until 22) {
                 add(dataList[(i + itemSize - 2) % itemSize])
             }
-//            add(dataList[dataList.size - 1])
-//            addAll(dataList)
-//            add(dataList[1])
         }
         notifyDataSetChanged()
     }

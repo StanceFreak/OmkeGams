@@ -146,7 +146,6 @@ class HomeFragment :
                             }
                             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                                 override fun onPageSelected(position: Int) {
-                                    Log.d("tes selected item pos :", position.toString())
                                     super.onPageSelected(position)
                                     val itemPosition = (position + sortedData.size - 2) % sortedData.size
                                     val roundedRating = sortedData[itemPosition].voteAverage.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
