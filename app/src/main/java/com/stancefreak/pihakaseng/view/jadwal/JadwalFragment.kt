@@ -1,15 +1,8 @@
 package com.stancefreak.pihakaseng.view.jadwal
 
-import android.os.Build
-import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.stancefreak.pihakaseng.R
 import com.stancefreak.pihakaseng.base.BaseFragment
 import com.stancefreak.pihakaseng.databinding.FragmentJadwalBinding
@@ -48,6 +41,7 @@ class JadwalFragment :
             val currWeekDateList = generateDateRange(currentDate, nextSunday)
 
             rvJadwalCalendar.apply {
+                (itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
                 layoutManager =
                     LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                 adapter = jadwalAdapter

@@ -20,6 +20,8 @@ class JadwalDateAdapter: RecyclerView.Adapter<JadwalDateAdapter.ViewHolder>() {
 
     private val dates = ArrayList<LocalDate>()
     private val currWeekList = ArrayList<LocalDate>()
+    private var itemPos = 0
+    private var prevItemPos = 0
 
     inner class ViewHolder(private val binding: ItemListJadwalDateBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: LocalDate) {
@@ -57,7 +59,7 @@ class JadwalDateAdapter: RecyclerView.Adapter<JadwalDateAdapter.ViewHolder>() {
                 val monthLabel = indoMonths[monthIndex].substring(0, 3)
                 val dayLabel = indoDayName[dayIndex].substring(0, 3)
                 tvItemDateLabel.text = "${dateNumber.format(item)} $monthLabel"
-                tvItemDateDay.text = dayLabel
+                tvItemDateDay.text = if (item != currDate) dayLabel else "Hari Ini"
 
                 if (!currWeekList.contains(item) && item != currDate) {
                     cvItemDateContainer.apply {
@@ -68,15 +70,12 @@ class JadwalDateAdapter: RecyclerView.Adapter<JadwalDateAdapter.ViewHolder>() {
                     tvItemDateLabel.setTextColor(ContextCompat.getColor(itemView.context, R.color.gray_3))
                 }
                 else {
-                    if (item == currDate) {
+                    if (itemPos == adapterPosition) {
                         cvItemDateContainer.apply {
                             strokeColor = ContextCompat.getColor(itemView.context, R.color.white)
                             setCardBackgroundColor(ContextCompat.getColor(itemView.context, R.color.indigo))
                         }
-                        tvItemDateDay.apply {
-                            text = "Hari Ini"
-                            setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
-                        }
+                        tvItemDateDay. setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
                         tvItemDateLabel.setTextColor(ContextCompat.getColor(itemView.context, R.color.white))
                     }
                     else {
@@ -84,9 +83,7 @@ class JadwalDateAdapter: RecyclerView.Adapter<JadwalDateAdapter.ViewHolder>() {
                             strokeColor = ContextCompat.getColor(itemView.context, R.color.indigo)
                             setCardBackgroundColor(ContextCompat.getColor(itemView.context, R.color.white))
                         }
-                        tvItemDateDay.apply {
-                            setTextColor(ContextCompat.getColor(itemView.context, R.color.indigo))
-                        }
+                        tvItemDateDay.setTextColor(ContextCompat.getColor(itemView.context, R.color.indigo))
                         tvItemDateLabel.setTextColor(ContextCompat.getColor(itemView.context, R.color.indigo))
                     }
                 }
@@ -109,7 +106,20 @@ class JadwalDateAdapter: RecyclerView.Adapter<JadwalDateAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = dates[position]
-        holder.bind(data)
+        holder.apply {
+            bind(data)
+            itemView.setOnClickListener {
+                itemPos = adapterPosition
+                if (prevItemPos == -1) {
+                    prevItemPos = itemPos
+                }
+                else {
+                    notifyItemChanged(prevItemPos)
+                    prevItemPos = itemPos
+                }
+                notifyItemChanged(itemPos)
+            }
+        }
     }
 
     fun setData(dataList: List<LocalDate>, weekList: List<LocalDate>) {
