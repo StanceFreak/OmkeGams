@@ -111,6 +111,9 @@ class DetailFragment : BaseFragment<FragmentDetailBinding, DetailViewModel>(Frag
                         rbDetailMovieRating.rating = roundedRating / 2
                         tvDetailMovieRatingValue.text = roundedRating.toString()
                         tvDetailMovieRatingCount.text = "${data.voteCount} Vote"
+                        llDetailBottomBtn.setOnClickListener {
+                            tlDetailTabContainer.getTabAt(1)?.select()
+                        }
 //                        tbDetailMovieWatchlist.setOnCheckedChangeListener { compoundButton, isChecked ->
 //                            if (isChecked)
 //                        }
